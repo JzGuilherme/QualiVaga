@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "QualiVaga — Assistente Gupy",
+  "version": "1.0.0",
+  "description": "Analisa vagas e sugere respostas com revisão humana.",
+  "minimum_chrome_version": "114",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": ["https://*.gupy.io/*", "https://api.openai.com/*"],
+  "background": { "service_worker": "background.js" },
+  "options_page": "options.html",
+  "action": { "default_title": "Configurar QualiVaga" },
+  "content_scripts": [{
+    "matches": ["https://*.gupy.io/*"],
+    "js": ["content.js"],
+    "run_at": "document_idle",
+    "all_frames": false
+  }],
+  "web_accessible_resources": [{
+    "resources": ["styles.css"],
+    "matches": ["https://*.gupy.io/*"]
+  }],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; connect-src https://api.openai.com; base-uri 'none'"
+  }
+}
