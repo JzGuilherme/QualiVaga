@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/background.test.cjs",
+    "test:browser": "node --test tests/browser.test.cjs",
+    "test:live": "node tests/inspect-live.cjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "playwright": "^1.64.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  }
+}
