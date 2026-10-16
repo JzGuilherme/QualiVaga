@@ -1,26 +1,149 @@
-🎯 QualiVaga🚧 STATUS DO PROJETO: EM DESENVOLVIMENTO ATIVO (WIP / MVP)O QualiVaga é um projeto experimental em fase de construção, validação técnica e testes iterativos. Esta aplicação ainda não é um produto finalizado ou concluído. Recursos, seletores de DOM e fluxos de IA continuam sendo aprimorados continuamente.Assistente Inteligente e Privado de Candidatura para GupyExtensão nativa para Google Chrome (Manifest V3) desenvolvida em JavaScript Vanilla, sem dependências de execução, sem pipeline de build e com foco rigoroso em privacidade, acurácia e resiliência a SPAs.📊 Status de Desenvolvimento do MVPComponente / MóduloStatus AtualObservaçãoArquitetura Base (Manifest V3)✅ ImplementadaComunicação isolada via Service Worker e Options UI.Extração de Descrição (JD) e Perguntas🚧 Em TestesMapeamento dinâmico no DOM da Gupy (sujeito a variações do layout).Análise e Matching com IA (gpt-4o-mini)🚧 Em ValidaçãoPrompts e estruturação do JSON de resposta em fase de ajustes.Injeção de Eventos React/Vue🚧 Em DesenvolvimentoSimulação nativa de input/change/blur para persistência no cliente.Suíte de Testes Locais e CDP🧪 Em ExecuçãoValidações sintéticas ativas via Playwright e formulários em memória.⚡ Destaques da SoluçãoZero Build & Zero Dependencies: Código executável em JS puro. Nenhuma camada de transpilação ou pacote de terceiros em produção.Privacidade por Design (store: false): Seus dados profissionais e chave de API nunca passam por servidores intermediários; a comunicação ocorre direto entre o navegador e a OpenAI.Integração Nativa com React/Vue: Simulação precisa de eventos do DOM (input, change, blur) e manipuladores de estado nativos para garantir que os valores digitados sejam reconhecidos no formulário da Gupy.Execução Segura em Shadow DOM: Interface do widget totalmente isolada do CSS da página hospedeira.🚀 Guia de Instalação (Ambiente de Desenvolvimento)Abra o navegador e acesse chrome://extensions.Ative a chave Modo do desenvolvedor no canto superior direito.Clique em Carregar sem compactação e selecione o diretório raiz deste projeto (onde reside o arquivo manifest.json).Clique no ícone da extensão para abrir as Configurações:Insira sua chave de API da OpenAI (com permissão de acesso ao modelo gpt-4o-mini).Substitua o perfil de exemplo (Master Profile) pelos seus dados e conquistas profissionais em formato JSON.Clique em Salvar.Acesse ou atualize qualquer página da Gupy (https://*.gupy.io/*). O widget da QualiVaga aparecerá no canto inferior direito.📋 Fluxo de Uso em 3 Passos (Fase Experimental)┌─────────────────────────┐     ┌─────────────────────────┐     ┌─────────────────────────┐
-│ 1. Revisar Descrição    │ ──> │ 2. Analisar com IA      │ ──> │ 3. Preencher & Confirmar│
-│ Extrai JD e questões.   │     │ Calcula Match Score e   │     │ Injeta respostas no DOM │
-│ Ajuste manual se preciso│     │ gera respostas custom.  │     │ mantendo rascunhos.     │
+```markdown
+# 🎯 QualiVaga
+
+> **Assistente Inteligente e Privado de Candidatura para Gupy**  
+> Extensão nativa para Google Chrome (Manifest V3) desenvolvida em **JavaScript Vanilla**, sem dependências de execução, sem pipeline de *build* e com foco rigoroso em privacidade, acurácia e resiliência a SPAs.
+
+---
+
+> 🚧 **STATUS DO PROJETO: EM DESENVOLVIMENTO ATIVO (WIP / MVP)**  
+> O **QualiVaga** é um projeto experimental em fase de construção, validação técnica e testes iterativos. **Esta aplicação ainda não é um produto finalizado.** Recursos, seletores de DOM e fluxos de IA continuam sendo aprimorados continuamente.
+
+---
+
+## 📌 Status dos Módulos
+
+| Módulo / Funcionalidade | Status | Descrição |
+| :--- | :---: | :--- |
+| **Arquitetura Base (Manifest V3)** | ✅ Concluído | Comunicação isolada via *Service Worker* e *Options UI*. |
+| **Extração de Descrição (JD) e Perguntas** | 🚧 Em Testes | Mapeamento dinâmico no DOM da Gupy (sujeito a variações do layout). |
+| **Análise e Matching com IA (`gpt-4o-mini`)** | 🚧 Em Validação | Prompts e estruturação do JSON de resposta em fase de ajustes. |
+| **Injeção de Eventos React/Vue** | 🚧 Em Dev | Simulação nativa de `input`/`change`/`blur` para persistência no cliente. |
+| **Suíte de Testes Locais e CDP** | 🧪 Ativo | Validações sintéticas ativas via Playwright e formulários em memória. |
+
+---
+
+## ✨ Destaques Técnicos
+
+* **⚡ Zero Build & Zero Dependencies:** Código executável em JS puro. Nenhuma camada de transpilação ou pacote de terceiros em produção.
+* **🔒 Privacidade por Design (`store: false`):** Seus dados profissionais e chave de API nunca passam por servidores intermediários; a comunicação ocorre direto entre o navegador e a OpenAI.
+* **⚛️ Integração Nativa com React/Vue:** Simulação precisa de eventos do DOM (`input`, `change`, `blur`) e manipuladores de estado nativos para garantir a persistência no formulário da Gupy.
+* **🛡️ Execução Segura em Shadow DOM:** Interface do *widget* totalmente isolada do CSS da página hospedeira.
+
+---
+
+## 🚀 Guia de Instalação (Ambiente de Desenvolvimento)
+
+1. Acesse no Chrome: `chrome://extensions`
+2. Ative o **Modo do desenvolvedor** no canto superior direito.
+3. Clique em **Carregar sem compactação** e selecione a pasta raiz deste repositório (onde está o `manifest.json`).
+4. Abra as **Configurações** da extensão (clicando no ícone dela):
+   * Insira sua API Key da OpenAI (modelo `gpt-4o-mini`).
+   * Cadastre o seu **Master Profile** em formato JSON.
+   * Salve as alterações.
+5. Acesse ou recarregue qualquer página da **Gupy** (`https://*.gupy.io/*`). O widget aparecerá no canto inferior direito.
+
+---
+
+## 🔄 Fluxo de Uso em 3 Passos
+
+```text
+┌─────────────────────────┐     ┌─────────────────────────┐     ┌─────────────────────────┐
+│  1. Revisar Descrição   │ ──> │   2. Analisar com IA    │ ──> │ 3. Preencher e Aplicar  │
+│  Extrai JD e questões.  │     │  Calcula Match Score e  │     │ Injeta respostas no DOM │
+│ Ajuste manual se preciso│     │  gera sugestões custom. │     │  mantendo rascunhos.    │
 └─────────────────────────┘     └─────────────────────────┘     └─────────────────────────┘
-Revisar Descrição: Expanda a aba Revisar descrição enviada. Verifique se a descrição da vaga (JD) e as perguntas abertas foram capturadas corretamente. Se a etapa da candidatura não contiver o texto da vaga, você pode colar a JD manualmente.Analisar: Autorize o envio e clique em Analisar. A extensão avaliará o alinhamento do seu perfil e gerará sugestões para até 20 perguntas abertas.Preencher e Aplicar: Revise a nota estimada, ajuste os textos gerados conforme necessário, selecione os campos desejados e clique em Preencher respostas selecionadas. Confira os campos na página antes de submeter a candidatura.🏗️ Estrutura do Projeto & Mapeamento de ArquivosArquivoResponsabilidademanifest.jsonConfiguração Manifest V3, permissões restritas, scripts de conteúdo, worker e CSP.options.html / options.jsInterface de configurações: validação do JSON de perfil, gravação e remoção segura da API Key.background.jsService Worker: valida mensagens, protege storage, sanitiza payloads e gerencia chamadas à OpenAI.content.jsScript de conteúdo: extração do DOM, observação de rotas em SPAs, renderização da UI e preenchimento de formulários.styles.cssEstilos prefixados e isolados dentro do Shadow DOM do widget.tests/background.test.cjsSuíte de testes unitários locais (sem chamadas reais de API ou bibliotecas externas).tests/browser.test.cjsTestes E2E executados no Chrome via Playwright e CDP (Chrome DevTools Protocol).tests/inspect-live.cjsScript de inspeção de leitura (read-only) em vagas públicas reais da Gupy.🔒 Arquitetura, Segurança e Privacidade[ Content Script ] ──(ANALYZE / CANCEL)──> [ Background Worker ] ──(HTTPS Auth)──> [ OpenAI API ]
- (Captura/Preenche DOM)                    (Valida & Sanitiza)                     (gpt-4o-mini)
-🛡️ Isolamento e ComunicaçãoSem Pontes Expostas: Não utiliza window.postMessage nem aceita conexões externas.Isolamento do Storage: A API Key e o perfil de usuário são lidos exclusivamente pelo Service Worker e pela tela de Options. A chave é transmitida unicamente no cabeçalho Authorization para api.openai.com.Storage Local: Utiliza chrome.storage.local com contexto de confiança (TRUSTED_CONTEXTS). Não há sincronização em nuvem, coleta de telemetria ou logs de prompts.🧹 Sanitização de Dados (Privacy First)A extração de texto ignora automaticamente elementos invisíveis, scripts, formulários, navegações e iframes.Sanitizador heurístico integrado remove padrões de credenciais, e-mails, CPFs, telefones e URLs antes do envio.O payload enviado à OpenAI utiliza store: false para evitar retenção de dados pelo provedor.⚙️ Engenharia do Motor de IA & ResiliênciaModelo Utilizado: gpt-4o-mini via endpoint de Chat Completions com response_format: { type: "json_object" }.Tratamento de Erros: Timeout estrito de 25 segundos por requisição, até 3 tentativas automáticas com backoff exponencial e jitter.Respeito a Rate Limits: Erros HTTP 429 e 5xx acionam tentativas automáticas. O cabeçalho Retry-After é respeitado para esperas de até 10 segundos.Isolamento de Estado: As operações ficam mantidas somente em memória. Mudar de aba ou alterar o formulário cancela a operação ativa para evitar custos desnecessários.🔍 Regras de Captura, Limitações e Preenchimento no DOM⚠️ Aviso de Limitação de Protótipo: Como o DOM da Gupy varia entre empresas, etapas e datas, não há garantia de cobertura universal. O projeto está em testes contínuos de compatibilidade.Leitura Prioritária: Mapeia seções públicas da Gupy (Descrição, Responsabilidades, Requisitos, Informações Adicionais) com prioridade sobre contêineres genéricos (main/article).Injeção de Eventos React/Vue: Utiliza o setter nativo do elemento seguido pelo disparo explícito dos eventos input, change e blur, garantindo sincronização com o estado da aplicação.Segurança na Injeção: Não sobrescreve campos já preenchidos.Filtro de Exclusão: Campos sensíveis (senhas, documentos, contatos), seleções de arquivo (upload), botões radio, selects, editores ricos e testes automatizados são ignorados por padrão nesta fase do desenvolvimento.🧪 Verificação e Suíte de Testes (Desenvolvimento)Execução de Testes Nativos (Node.js 18+)PowerShell# Verificação de sintaxe dos scripts
+
+```
+
+1. **Revisar Descrição:** Expanda **Revisar descrição enviada**. Confira o texto da vaga (JD) e as perguntas capturadas (cole manualmente se a etapa não contiver a JD).
+2. **Analisar:** Autorize o envio e clique em **Analisar**. A extensão avaliará o alinhamento do perfil e gerará sugestões para até 20 perguntas abertas.
+3. **Preencher e Aplicar:** Revise a nota estimada, edite os textos gerados conforme necessário, selecione os campos desejados e clique em **Preencher respostas selecionadas**.
+
+---
+
+## 📂 Mapeamento do Repositório
+
+```text
+QualiVaga/
+├── manifest.json            # Configuração MV3, permissões, content script, worker e CSP
+├── options.html / .js       # Interface de configuração, validação de JSON e chave OpenAI
+├── background.js            # Service Worker: validação, sanitização e chamadas à OpenAI
+├── content.js               # Content Script: extração do DOM, observação de SPAs e auto-fill
+├── styles.css               # Estilos prefixados e isolados via Shadow DOM
+└── tests/
+    ├── background.test.cjs  # Testes unitários do worker (sem API ou libs externas)
+    ├── browser.test.cjs     # Testes E2E no Chrome headless via Playwright e CDP
+    └── inspect-live.cjs     # Inspeção read-only em vagas públicas da Gupy
+
+```
+
+---
+
+## 🛡️ Arquitetura, Segurança e Privacidade
+
+```text
+┌──────────────────┐           ┌──────────────────┐           ┌──────────────────┐
+│  Content Script  │ ────────> │Background Worker │ ────────> │   OpenAI API     │
+│ (Captura/Preenche│  ANALYZE  │ (Valida/Sanitiza │ HTTPS Auth│  (gpt-4o-mini)   │
+│      DOM)        │  CANCEL   │  e faz Chamada)  │           │                  │
+└──────────────────┘           └──────────────────┘           └──────────────────┘
+
+```
+
+* **Isolamento de Comunicação:** Não utiliza `window.postMessage` nem aceita mensagens externas. A chave de API e o perfil são lidos apenas pelo *Worker* e pela tela de *Options*.
+* **Storage Local Seguro:** Usa `chrome.storage.local` restrito a `TRUSTED_CONTEXTS`. Sem sincronização em nuvem ou logs de prompts.
+* **Sanitização de Payloads:** Remove heuristicamente e-mails, CPFs, telefones, senhas e URLs antes de enviar à OpenAI. Usa `store: false` nas requisições.
+* **Resiliência de Rede:** Timeout de 25s, backoff exponencial com jitter e até 3 tentativas automáticas para erros 429/5xx.
+
+---
+
+## 🔍 Regras de Captura, Limitações e DOM
+
+* **Mapeamento Semântico:** Prioriza seções públicas (*Descrição*, *Responsabilidades*, *Requisitos*, *Informações Adicionais*).
+* **Notificação ao React/Vue:** Utiliza o *setter* nativo do elemento e dispara manualmente `input`, `change` e `blur`.
+* **Campos Preservados:** Nunca sobrescreve campos já preenchidos.
+* **Exclusões Heurísticas:** Ignora upload de arquivos, selects, radios, senhas, documentos, contatos e testes automatizados.
+
+---
+
+## 🧪 Verificação e Suíte de Testes
+
+### 1. Testes Nativos de Sintaxe e Worker (Node.js 18+)
+
+```powershell
 node --check background.js
 node --check content.js
 node --check options.js
-
-# Executar suíte de testes unitários do background
 node --test tests/background.test.cjs
-Testes E2E com Navegador Automatizado (Node.js 20+)As dependências de desenvolvimento são restritas ao ambiente de testes. Para executar a suíte completa com Playwright e Chrome DevTools Protocol (CDP):PowerShell# Instala dependências de teste
+
+```
+
+### 2. Testes E2E e Automação de Navegador (Node.js 20+)
+
+```powershell
+# Instala dependências restritas de teste
 npm ci
 
-# Executa todos os testes
+# Executa a suíte completa
 npm test
 
-# Executa apenas a suíte de navegador (sintética via fixture.gupy.io)
+# Teste de navegador sintético via CDP/Playwright
 npm run test:browser
 
-# Executa inspeção de leitura em vaga pública real
+# Inspeção em vaga pública real da Gupy
 npm run test:live
-Nota Técnica sobre Validação em Produção: Em outubro de 2026, a extensão foi inspecionada em vagas públicas reais com Chrome 155. O preenchimento foi validado em formulários sintéticos controlados com React real. A validação em fluxos de candidatura 100% autenticados e finais da Gupy continua sob ciclo de testes e evolução constante.🔄 Procedimento de Recarga durante o DesenvolvimentoApós realizar alterações em content.js ou styles.css:Acesse chrome://extensions.Clique no ícone de Recarregar no cartão da extensão QualiVaga.Atualize a aba aberta da Gupy (F5 ou Ctrl+R) para injetar a versão atualizada do script de conteúdo.
+
+```
+
+---
+
+## 🔄 Procedimento de Recarga em Desenvolvimento
+
+Após modificar `content.js` ou `styles.css`:
+
+1. Acesse `chrome://extensions`.
+2. Clique em **Recarregar** no cartão da extensão **QualiVaga**.
+3. Atualize a aba aberta na Gupy (`F5` ou `Ctrl+R`).
+
+---
