@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "test": "node --test tests/background.test.cjs",
+    "test": "node --test tests/background.test.cjs tests/auth-session.test.cjs",
     "test:browser": "node --test tests/browser.test.cjs",
     "test:live": "node tests/inspect-live.cjs"
   },
