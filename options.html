@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QualiVaga — Configurações</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="options.js" defer></script>
+</head>
+<body class="gupy-ai-helper-options">
+  <main class="gupy-ai-helper-card">
+    <p class="gupy-ai-helper-eyebrow">QUALIVAGA / CONFIGURAÇÕES</p>
+    <h1>Seu perfil, suas respostas.</h1>
+    <p>Ao clicar em “Analisar” na Gupy, a descrição revisada, as perguntas e seu perfil profissional serão enviados à OpenAI. A API pode gerar cobranças.</p>
+    <form id="settings">
+      <label for="api-key">OpenAI API Key</label>
+      <input id="api-key" type="password" autocomplete="off" spellcheck="false" placeholder="Cole sua chave; vazio mantém a atual" maxlength="512">
+      <p id="key-state" class="gupy-ai-helper-muted"></p>
+      <label for="profile">Master Profile (objeto JSON, até 20.000 caracteres)</label>
+      <textarea id="profile" rows="19" maxlength="20000" spellcheck="false" required aria-describedby="profile-help"></textarea>
+      <p id="profile-help">Use apenas fatos reais. Não inclua CPF, telefone, endereço, senhas ou dados de saúde. Substitua o exemplo antes de salvar.</p>
+      <div class="gupy-ai-helper-actions">
+        <button type="submit">Salvar configurações</button>
+        <button id="delete-key" type="button" class="gupy-ai-helper-secondary">Excluir chave</button>
+      </div>
+    </form>
+    <p id="status" role="status" aria-live="polite"></p>
+    <p class="gupy-ai-helper-muted">A chave e o perfil ficam em chrome.storage.local, sem sincronização. Esse armazenamento não é um cofre criptografado. A chave não é enviada ao content script nem à Gupy.</p>
+  </main>
+</body>
+</html>
