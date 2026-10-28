@@ -3,29 +3,93 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>QualiVaga — Configurações</title>
+  <title>QualiVaga — Radar de Vagas &amp; Meu Currículo</title>
   <link rel="stylesheet" href="styles.css">
-  <script src="options.js" defer></script>
+  <script type="module" src="options.js"></script>
 </head>
 <body class="gupy-ai-helper-options">
   <main class="gupy-ai-helper-card">
-    <p class="gupy-ai-helper-eyebrow">QUALIVAGA / CONFIGURAÇÕES</p>
-    <h1>Seu perfil, suas respostas.</h1>
-    <p>Ao clicar em “Analisar” na Gupy, a descrição revisada, as perguntas e seu perfil profissional serão enviados à OpenAI. A API pode gerar cobranças.</p>
-    <form id="settings">
-      <label for="api-key">OpenAI API Key</label>
-      <input id="api-key" type="password" autocomplete="off" spellcheck="false" placeholder="Cole sua chave; vazio mantém a atual" maxlength="512">
-      <p id="key-state" class="gupy-ai-helper-muted"></p>
-      <label for="profile">Master Profile (objeto JSON, até 20.000 caracteres)</label>
-      <textarea id="profile" rows="19" maxlength="20000" spellcheck="false" required aria-describedby="profile-help"></textarea>
-      <p id="profile-help">Use apenas fatos reais. Não inclua CPF, telefone, endereço, senhas ou dados de saúde. Substitua o exemplo antes de salvar.</p>
-      <div class="gupy-ai-helper-actions">
-        <button type="submit">Salvar configurações</button>
-        <button id="delete-key" type="button" class="gupy-ai-helper-secondary">Excluir chave</button>
+    <header class="gupy-ai-helper-top-header">
+      <div>
+        <p class="gupy-ai-helper-eyebrow">QUALIVAGA / DESCOBERTA &amp; COPILOTO MV3</p>
+        <h1>Radar Multi-Plataforma &amp; Currículo</h1>
       </div>
-    </form>
-    <p id="status" role="status" aria-live="polite"></p>
-    <p class="gupy-ai-helper-muted">A chave e o perfil ficam em chrome.storage.local, sem sincronização. Esse armazenamento não é um cofre criptografado. A chave não é enviada ao content script nem à Gupy.</p>
+      <div class="gupy-ai-helper-tabs" role="tablist">
+        <button id="tab-radar-btn" type="button" role="tab" aria-selected="true" class="gupy-ai-helper-tab-active">Radar de Vagas</button>
+        <button id="tab-resume-btn" type="button" role="tab" aria-selected="false" class="gupy-ai-helper-secondary">Meu Currículo</button>
+      </div>
+    </header>
+
+    <!-- ABA 1: RADAR DE VAGAS -->
+    <section id="section-radar" role="tabpanel" aria-labelledby="tab-radar-btn">
+      <div class="gupy-ai-helper-radar-hero">
+        <p>Varredura ativa em <strong>Gupy</strong>, <strong>LinkedIn</strong> e <strong>InfoJobs</strong> com cálculo de <strong>Match Score Híbrido</strong> (60% determinístico local + 40% semântico via <code>gpt-4o-mini</code>).</p>
+        <button id="run-discovery-btn" type="button" class="gupy-ai-helper-primary-full">Rodar Busca pelo Meu Currículo</button>
+      </div>
+
+      <p id="discovery-status" class="gupy-ai-helper-status" role="status" aria-live="polite">
+        Clique em "Rodar Busca pelo Meu Currículo" para varrer Gupy, LinkedIn e InfoJobs.
+      </p>
+
+      <div id="discovery-progress" class="gupy-ai-helper-platform-pills" hidden>
+        <span id="pill-gupy" class="gupy-ai-helper-badge">Gupy: aguardando…</span>
+        <span id="pill-linkedin" class="gupy-ai-helper-badge">LinkedIn: aguardando…</span>
+        <span id="pill-infojobs" class="gupy-ai-helper-badge">InfoJobs: aguardando…</span>
+      </div>
+
+      <h2 id="discovery-headline" class="gupy-ai-helper-radar-headline" hidden></h2>
+
+      <div class="gupy-ai-helper-filter-bar" role="group" aria-label="Filtrar por plataforma">
+        <button type="button" data-platform="Todas" class="gupy-ai-helper-filter-btn gupy-ai-helper-tab-active">Todas</button>
+        <button type="button" data-platform="Gupy" class="gupy-ai-helper-filter-btn gupy-ai-helper-secondary">Gupy</button>
+        <button type="button" data-platform="LinkedIn" class="gupy-ai-helper-filter-btn gupy-ai-helper-secondary">LinkedIn</button>
+        <button type="button" data-platform="InfoJobs" class="gupy-ai-helper-filter-btn gupy-ai-helper-secondary">InfoJobs</button>
+      </div>
+
+      <div id="discovery-results" class="gupy-ai-helper-radar-list"></div>
+    </section>
+
+    <!-- ABA 2: MEU CURRÍCULO & CREDENCIAIS -->
+    <section id="section-resume" role="tabpanel" aria-labelledby="tab-resume-btn" hidden>
+      <p>Seus dados reais ficam salvos exclusivamente em <code>chrome.storage.local</code> no seu navegador. Ao usar a análise semântica ou o Copiloto na página da vaga, o currículo sanitizado é processado com <code>store: false</code>.</p>
+
+      <form id="settings">
+        <label for="api-key">OpenAI API Key (exclusiva do Service Worker)</label>
+        <input id="api-key" type="password" autocomplete="off" spellcheck="false" placeholder="Cole sua chave sk-...; vazio mantém a atual" maxlength="512">
+        <p id="key-state" class="gupy-ai-helper-muted"></p>
+
+        <div class="gupy-ai-helper-quick-tags">
+          <div>
+            <label for="quick-keywords">Tags de Busca (separadas por vírgula)</label>
+            <input id="quick-keywords" type="text" placeholder="Ex: Desenvolvedor Full Stack, React, Node.js">
+          </div>
+          <div>
+            <label for="quick-skills">Hard Skills Principais (separadas por vírgula)</label>
+            <input id="quick-skills" type="text" placeholder="Ex: JavaScript, TypeScript, React, Node.js, SQL">
+          </div>
+        </div>
+
+        <div class="gupy-ai-helper-actions">
+          <button id="import-json-btn" type="button" class="gupy-ai-helper-secondary">Importar arquivo JSON</button>
+          <button id="export-json-btn" type="button" class="gupy-ai-helper-secondary">Exportar JSON</button>
+          <button id="load-example-btn" type="button" class="gupy-ai-helper-secondary">Carregar Exemplo Padrão</button>
+          <input id="import-file-input" type="file" accept=".json,application/json" hidden>
+        </div>
+
+        <label for="profile">Meu Currículo Estruturado (JSON conforme resume.schema.json ou texto para conversão)</label>
+        <textarea id="profile" rows="16" maxlength="25000" spellcheck="false" required aria-describedby="profile-help"></textarea>
+        <p id="profile-help" class="gupy-ai-helper-muted">Use apenas fatos reais. Não inclua CPF, telefone, endereço, senhas ou dados de saúde.</p>
+
+        <div class="gupy-ai-helper-actions">
+          <button type="submit">Salvar Meu Currículo e Configurações</button>
+          <button id="delete-key" type="button" class="gupy-ai-helper-secondary">Excluir chave</button>
+          <button id="export-telemetry-btn" type="button" class="gupy-ai-helper-secondary">Exportar Diagnóstico de KPIs (JSON)</button>
+        </div>
+      </form>
+    </section>
+
+    <p id="status" role="status" aria-live="polite" class="gupy-ai-helper-status"></p>
+    <p class="gupy-ai-helper-muted">A chave e o currículo ficam em chrome.storage.local, sem sincronização externa. A chave nunca é exposta ao Content Script.</p>
   </main>
 </body>
 </html>

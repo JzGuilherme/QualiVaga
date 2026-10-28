@@ -13,7 +13,7 @@
 }
 .gupy-ai-helper-panel *, .gupy-ai-helper-options * { box-sizing: border-box; }
 .gupy-ai-helper-panel {
-  width: min(400px, calc(100vw - 32px));
+  width: min(420px, calc(100vw - 32px));
   background: #fff;
   border: 1px solid #d9e3e9;
   border-radius: 16px;
@@ -27,8 +27,13 @@
   padding: 12px 16px;
   background: #edf5f7;
 }
+.gupy-ai-helper-brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 .gupy-ai-helper-header strong { font-size: 18px; }
-.gupy-ai-helper-body { padding: 0 16px 16px; max-height: min(75vh, 760px); overflow-y: auto; }
+.gupy-ai-helper-body { padding: 0 16px 16px; max-height: min(78vh, 780px); overflow-y: auto; }
 .gupy-ai-helper-panel [hidden], .gupy-ai-helper-options [hidden] { display: none !important; }
 .gupy-ai-helper-panel button, .gupy-ai-helper-options button {
   font: inherit;
@@ -44,6 +49,91 @@
 .gupy-ai-helper-panel button:disabled, .gupy-ai-helper-options button:disabled { opacity: .55; cursor: wait; }
 .gupy-ai-helper-panel .gupy-ai-helper-secondary, .gupy-ai-helper-options .gupy-ai-helper-secondary {
   background: #f0f4f6; color: #244453; border-color: #d6e1e6;
+}
+.gupy-ai-helper-panel .gupy-ai-helper-tab-active, .gupy-ai-helper-options .gupy-ai-helper-tab-active {
+  background: #126156; color: #fff; border-color: #126156;
+}
+.gupy-ai-helper-primary-full {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px 16px !important;
+  font-size: 15px !important;
+}
+.gupy-ai-helper-tabs, .gupy-ai-helper-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 12px 0;
+}
+.gupy-ai-helper-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  background: #e1eff2;
+  color: #126156;
+  border-radius: 999px;
+}
+.gupy-ai-helper-score-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: 750;
+  background: #126156;
+  color: #fff;
+  border-radius: 999px;
+}
+.gupy-ai-helper-platform-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+}
+.gupy-ai-helper-radar-headline {
+  font-size: 18px;
+  color: #126156;
+  margin: 14px 0 8px;
+}
+.gupy-ai-helper-radar-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
+.gupy-ai-helper-job-card {
+  border: 1px solid #d6e1e6;
+  border-radius: 12px;
+  padding: 14px;
+  background: #fafcfd;
+}
+.gupy-ai-helper-job-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.gupy-ai-helper-tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0;
+}
+.gupy-ai-helper-tag-match {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: #dff4ea;
+  color: #0e583a;
+  font-weight: 600;
+}
+.gupy-ai-helper-tag-missing {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: #fff3db;
+  color: #875000;
+  font-weight: 600;
 }
 .gupy-ai-helper-panel textarea, .gupy-ai-helper-options textarea, .gupy-ai-helper-options input {
   display: block;
@@ -61,7 +151,7 @@
 .gupy-ai-helper-panel :focus-visible, .gupy-ai-helper-options :focus-visible { outline: 3px solid #288bce; outline-offset: 2px; }
 .gupy-ai-helper-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
 .gupy-ai-helper-muted { color: #536a79; font-size: 12px; }
-.gupy-ai-helper-job-title { font-size: 16px; font-weight: 700; }
+.gupy-ai-helper-job-title { font-size: 16px; font-weight: 700; margin: 6px 0; }
 .gupy-ai-helper-consent { display: block; margin-top: 14px; font-size: 12px; }
 .gupy-ai-helper-status { background: #edf5f7; border-radius: 8px; padding: 10px; }
 .gupy-ai-helper-results { overflow-wrap: anywhere; }
@@ -70,10 +160,29 @@
 .gupy-ai-helper-answer label { display: block; margin-top: 8px; }
 .gupy-ai-helper-questions { font-size: 12px; overflow-wrap: anywhere; }
 .gupy-ai-helper-panel summary { cursor: pointer; font-weight: 650; }
-.gupy-ai-helper-options { margin: 0; padding: 40px 20px; background: #eef3f5; }
-.gupy-ai-helper-card { max-width: 760px; margin: auto; padding: 32px; background: #fff; border: 1px solid #d9e3e9; border-radius: 20px; }
-.gupy-ai-helper-eyebrow { color: #126156; font-weight: 700; font-size: 12px; letter-spacing: .12em; }
-.gupy-ai-helper-options h1 { font-size: clamp(24px, 4vw, 36px); letter-spacing: -.03em; }
-.gupy-ai-helper-options label { display: block; margin-top: 20px; font-weight: 650; }
+.gupy-ai-helper-options { margin: 0; padding: 24px 16px; min-width: 680px; background: #eef3f5; }
+.gupy-ai-helper-card { max-width: 860px; margin: auto; padding: 28px; background: #fff; border: 1px solid #d9e3e9; border-radius: 20px; }
+.gupy-ai-helper-top-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid #e3ecef;
+  padding-bottom: 14px;
+  margin-bottom: 18px;
+}
+.gupy-ai-helper-eyebrow { color: #126156; font-weight: 700; font-size: 12px; letter-spacing: .12em; margin: 0; }
+.gupy-ai-helper-options h1 { font-size: clamp(22px, 3vw, 30px); letter-spacing: -.03em; margin: 4px 0 0; }
+.gupy-ai-helper-options label { display: block; margin-top: 16px; font-weight: 650; }
 .gupy-ai-helper-options textarea { font: 13px/1.6 ui-monospace, Consolas, monospace; }
-@media (max-width: 480px) { :host { right: 16px; bottom: 16px; } .gupy-ai-helper-card { padding: 20px; } }
+.gupy-ai-helper-quick-tags {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+@media (max-width: 680px) {
+  :host { right: 16px; bottom: 16px; }
+  .gupy-ai-helper-options { min-width: auto; padding: 12px; }
+  .gupy-ai-helper-card { padding: 18px; }
+}
