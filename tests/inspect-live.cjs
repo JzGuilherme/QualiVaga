@@ -2,11 +2,13 @@ const { chromium } = require('playwright');
 const fs = require('node:fs/promises');
 const path = require('node:path');
 const assert = require('node:assert/strict');
+const { loadLocalEnv } = require('./load-env.cjs');
 
 (async () => {
   const root = path.resolve(__dirname, '..');
+  const envConfig = loadLocalEnv(root);
   const context = await chromium.launchPersistentContext('', {
-    channel: 'chrome', headless: true,
+    channel: 'chrome', headless: envConfig.headless,
     args: ['--enable-unsafe-extension-debugging'],
     ignoreDefaultArgs: ['--disable-extensions'],
     viewport: { width: 1440, height: 1000 }
@@ -23,7 +25,7 @@ const assert = require('node:assert/strict');
       if (!['GET', 'HEAD'].includes(request.method())) return route.abort();
       return route.continue();
     });
-    const url = process.env.GUPY_TEST_URL || 'https://vagasisasaude.gupy.io/jobs/12641879';
+    const url = envConfig.gupyTestUrl;
     const target = new URL(url);
     assert.ok(target.protocol === 'https:' && target.hostname.endsWith('.gupy.io') && /^\/jobs\/\d+\/?$/.test(target.pathname), 'Use a public Gupy /jobs/id URL');
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });

@@ -1,6 +1,9 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 const { selectStartPage } = require('./open-auth-browser.cjs');
+const { loadLocalEnv } = require('./load-env.cjs');
 
 function fixture(urls) {
   const navigations = [];
@@ -38,4 +41,13 @@ test('does not mistake a lookalike host for an existing Gupy session', async () 
   const f = fixture(['https://gupy.io.example.org/form']);
   await selectStartPage(f.context);
   assert.deepEqual(f.navigations, [{ from: 'new-tab', to: 'https://portal.gupy.io/' }]);
+});
+
+test('loadLocalEnv parses .env variables safely and strips placeholder keys', () => {
+  const root = path.resolve(__dirname, '..');
+  assert.equal(fs.existsSync(path.join(root, '.env.example')), true, '.env.example must exist');
+  const env = loadLocalEnv(root);
+  assert.equal(typeof env.headless, 'boolean');
+  assert.equal(fs.existsSync(env.resumePath), true);
+  assert.equal(env.apiKey.includes('sua-chave-aqui'), false);
 });

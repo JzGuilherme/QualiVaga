@@ -1,0 +1,74 @@
+{
+  "perfil": {
+    "titulo": "Engenheiro de Software Back-end Pleno",
+    "senioridade": "pleno",
+    "anos_experiencia": 4,
+    "resumo": "Engenheiro de Software Back-end Pleno com 4 anos de experiência projetando microsserviços resilientes em Java, Spring Boot, Docker, AWS, Kafka e bancos de dados relacionais (PostgreSQL e MySQL).",
+    "idiomas": [
+      { "idioma": "Português", "nivel": "Nativo" },
+      { "idioma": "Inglês", "nivel": "Avançado" }
+    ]
+  },
+  "palavras_chave_busca": [
+    "Engenheiro Back-end Java Pleno",
+    "Desenvolvedor Spring Boot",
+    "Software Engineer Java AWS"
+  ],
+  "hard_skills": [
+    "Java",
+    "Spring Boot",
+    "Docker",
+    "AWS",
+    "PostgreSQL",
+    "MySQL",
+    "SQL",
+    "Kafka",
+    "Redis",
+    "REST API",
+    "Git",
+    "CI/CD",
+    "Linux"
+  ],
+  "projetos_e_experiencias": [
+    {
+      "id": "exp-pl-1",
+      "tipo": "experiencia",
+      "titulo": "Engenheiro Back-end Java Pleno",
+      "organizacao": "Pagamentos Digitais S.A.",
+      "periodo": "2024 - Atual",
+      "descricao": "Desenvolvimento de microsserviços financeiros com Java 21, Spring Boot, mensageria Kafka, cache Redis e infraestrutura em containers Docker na AWS.",
+      "resultados": [
+        "Processamento de 50 mil transações por minuto com baixa latência e alta disponibilidade.",
+        "Otimização de queries em PostgreSQL reduzindo uso de CPU do RDS em 40%."
+      ],
+      "tecnologias": ["Java", "Spring Boot", "Kafka", "Redis", "PostgreSQL", "Docker", "AWS"]
+    },
+    {
+      "id": "exp-pl-2",
+      "tipo": "experiencia",
+      "titulo": "Desenvolvedor Back-end Java",
+      "organizacao": "Sistemas Corporativos Ltda",
+      "periodo": "2022 - 2024",
+      "descricao": "Manutenção e evolução de APIs REST em Java e Spring Boot integradas com MySQL e pipelines CI/CD.",
+      "resultados": [
+        "Migração de módulos monolíticos para serviços independentes dockerizados."
+      ],
+      "tecnologias": ["Java", "Spring Boot", "MySQL", "SQL", "REST API", "Docker", "CI/CD"]
+    }
+  ],
+  "formacao": [
+    {
+      "curso": "Bacharelado em Ciência da Computação",
+      "instituicao": "Universidade Federal",
+      "nivel": "Graduação",
+      "status": "Concluído",
+      "ano_conclusao": "2023"
+    }
+  ],
+  "preferencias_vaga": {
+    "modalidades": ["remoto", "hibrido"],
+    "localidades": ["São Paulo - SP", "Brasil"],
+    "plataformas_ativas": ["Gupy", "LinkedIn", "InfoJobs"],
+    "nivel_minimo_match": 45
+  }
+}

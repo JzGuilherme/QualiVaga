@@ -1,0 +1,73 @@
+{
+  "perfil": {
+    "titulo": "QA Automation Engineer / SDET",
+    "senioridade": "pleno",
+    "anos_experiencia": 3,
+    "resumo": "Engenheiro de Qualidade de Software e Automação (SDET) especialista em Playwright, Chrome DevTools Protocol (CDP), Cypress, testes E2E e de API com TypeScript, JavaScript e integração contínua (CI/CD).",
+    "idiomas": [
+      { "idioma": "Português", "nivel": "Nativo" },
+      { "idioma": "Inglês", "nivel": "Avançado" }
+    ]
+  },
+  "palavras_chave_busca": [
+    "QA Automation Playwright",
+    "SDET TypeScript",
+    "Analista de Testes Automatizados"
+  ],
+  "hard_skills": [
+    "Playwright",
+    "Cypress",
+    "Jest",
+    "JavaScript",
+    "TypeScript",
+    "CI/CD",
+    "Git",
+    "REST API",
+    "SQL",
+    "Docker",
+    "Linux",
+    "Node.js"
+  ],
+  "projetos_e_experiencias": [
+    {
+      "id": "exp-qa-1",
+      "tipo": "experiencia",
+      "titulo": "QA Automation Engineer (SDET)",
+      "organizacao": "FinTech Cloud Brasil",
+      "periodo": "2024 - Atual",
+      "descricao": "Arquitetura de testes E2E com Playwright e TypeScript, automação via Chrome DevTools Protocol (CDP), mocks determinísticos de rede e execução paralela em pipelines CI/CD.",
+      "resultados": [
+        "Redução de regressões em produção em 70% e tempo de execução da suíte E2E abaixo de 8 minutos.",
+        "Automação de testes para extensões Chrome Manifest V3 e SPAs em React."
+      ],
+      "tecnologias": ["Playwright", "TypeScript", "JavaScript", "CI/CD", "Docker", "REST API"]
+    },
+    {
+      "id": "exp-qa-2",
+      "tipo": "experiencia",
+      "titulo": "Analista de Qualidade de Software",
+      "organizacao": "E-Commerce Solutions",
+      "periodo": "2023 - 2024",
+      "descricao": "Criação de testes automatizados web com Cypress e Jest, validação de contratos REST API e consultas SQL para massa de testes.",
+      "resultados": [
+        "Cobertura automatizada de 85% das jornadas críticas de carrinho e pagamento."
+      ],
+      "tecnologias": ["Cypress", "Jest", "JavaScript", "SQL", "Git"]
+    }
+  ],
+  "formacao": [
+    {
+      "curso": "Sistemas de Informação",
+      "instituicao": "Universidade Presbiteriana",
+      "nivel": "Graduação",
+      "status": "Concluído",
+      "ano_conclusao": "2023"
+    }
+  ],
+  "preferencias_vaga": {
+    "modalidades": ["remoto", "hibrido"],
+    "localidades": ["Brasil"],
+    "plataformas_ativas": ["Gupy", "LinkedIn", "InfoJobs"],
+    "nivel_minimo_match": 45
+  }
+}

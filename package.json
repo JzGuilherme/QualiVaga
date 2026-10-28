@@ -1,9 +1,12 @@
 {
   "private": true,
   "scripts": {
-    "test": "node --test tests/background.test.cjs tests/auth-session.test.cjs",
+    "test": "node --test tests/background.test.cjs tests/auth-session.test.cjs tests/alpha-personas.test.cjs",
     "test:browser": "node --test tests/browser.test.cjs",
-    "test:live": "node tests/inspect-live.cjs"
+    "test:alpha": "node --test tests/background.test.cjs tests/alpha-personas.test.cjs tests/browser.test.cjs",
+    "test:beta": "node --test tests/auth-session.test.cjs tests/beta-live.test.cjs",
+    "test:live": "node tests/inspect-live.cjs",
+    "validate:mvp": "npm run test:alpha && npm run test:beta && node scripts/evaluate-mvp.cjs"
   },
   "devDependencies": {
     "esbuild": "^0.28.2",

@@ -2,6 +2,7 @@
 const { chromium } = require('playwright');
 const path = require('node:path');
 const fs = require('node:fs/promises');
+const { loadLocalEnv } = require('./load-env.cjs');
 
 async function selectStartPage(context) {
   const pages = context.pages();
@@ -20,6 +21,7 @@ async function selectStartPage(context) {
 
 async function main() {
   const root = path.resolve(__dirname, '..');
+  const envConfig = loadLocalEnv(root);
   const profile = path.join(root, '.test-profile-auth');
   const context = await chromium.launchPersistentContext(profile, {
     channel: 'chrome', headless: false, viewport: null,
@@ -27,7 +29,20 @@ async function main() {
     ignoreDefaultArgs: ['--disable-extensions']
   });
   const cdp = await context.browser().newBrowserCDPSession();
+  const workerReady = context.waitForEvent('serviceworker', { timeout: 15000 }).catch(() => null);
   await cdp.send('Extensions.loadUnpacked', { path: root });
+  const worker = await workerReady;
+  if (worker && (envConfig.apiKey || envConfig.resumePath)) {
+    try {
+      const resumeObj = JSON.parse(await fs.readFile(envConfig.resumePath, 'utf8'));
+      await worker.evaluate(async ({ apiKey, resumeObj }) => {
+        await chrome.storage.local.set({
+          masterProfile: resumeObj,
+          ...(apiKey ? { apiKey } : {})
+        });
+      }, { apiKey: envConfig.apiKey, resumeObj });
+    } catch {}
+  }
   const port = Number((await fs.readFile(path.join(profile, 'DevToolsActivePort'), 'utf8')).split('\n')[0]);
   if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('Invalid local debugging port');
   await fs.mkdir(path.join(root, 'test-results'), { recursive: true });

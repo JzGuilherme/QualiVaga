@@ -1,0 +1,73 @@
+{
+  "perfil": {
+    "titulo": "Desenvolvedor Full Stack Júnior",
+    "senioridade": "junior",
+    "anos_experiencia": 1,
+    "resumo": "Desenvolvedor Full Stack Júnior com foco em React, Next.js, TypeScript, Node.js, PostgreSQL e Prisma. Experiência construindo projetos autorais e acadêmicos com autenticação, APIs REST e banco de dados relacional.",
+    "idiomas": [
+      { "idioma": "Português", "nivel": "Nativo" },
+      { "idioma": "Inglês", "nivel": "Intermediário" }
+    ]
+  },
+  "palavras_chave_busca": [
+    "Desenvolvedor Full Stack Júnior",
+    "Desenvolvedor Front-end React Júnior",
+    "Estágio Desenvolvimento Web"
+  ],
+  "hard_skills": [
+    "JavaScript",
+    "TypeScript",
+    "React",
+    "Next.js",
+    "Node.js",
+    "PostgreSQL",
+    "Prisma",
+    "SQL",
+    "HTML5",
+    "CSS3",
+    "Git",
+    "REST API"
+  ],
+  "projetos_e_experiencias": [
+    {
+      "id": "proj-jr-1",
+      "tipo": "projeto",
+      "titulo": "Plataforma SaaS de Gestão Acadêmica",
+      "organizacao": "Projeto Autoral / TCC",
+      "periodo": "2025 - 2026",
+      "descricao": "Aplicação Full Stack construída com Next.js, React, TypeScript, Node.js, Prisma ORM e PostgreSQL para controle de entregas de alunos.",
+      "resultados": [
+        "Modelagem de banco relacional no PostgreSQL com migrations via Prisma.",
+        "Deploy automatizado e interface responsiva acessível."
+      ],
+      "tecnologias": ["React", "Next.js", "TypeScript", "Node.js", "PostgreSQL", "Prisma"]
+    },
+    {
+      "id": "exp-jr-1",
+      "tipo": "academico",
+      "titulo": "Monitor de Desenvolvimento Web",
+      "organizacao": "FATEC São Paulo",
+      "periodo": "2025",
+      "descricao": "Apoio técnico aos alunos em lógica de programação, JavaScript, HTML5, CSS3, Git e consumo de REST API.",
+      "resultados": [
+        "Auxílio direto a 45 estudantes na construção de projetos práticos."
+      ],
+      "tecnologias": ["JavaScript", "HTML5", "CSS3", "Git", "REST API"]
+    }
+  ],
+  "formacao": [
+    {
+      "curso": "Análise e Desenvolvimento de Sistemas",
+      "instituicao": "FATEC São Paulo",
+      "nivel": "Graduação Tecnológica",
+      "status": "Cursando",
+      "ano_conclusao": "2026"
+    }
+  ],
+  "preferencias_vaga": {
+    "modalidades": ["remoto", "hibrido"],
+    "localidades": ["São Paulo - SP", "Brasil"],
+    "plataformas_ativas": ["Gupy", "LinkedIn", "InfoJobs"],
+    "nivel_minimo_match": 40
+  }
+}
