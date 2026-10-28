@@ -1,25 +1,48 @@
 {
   "manifest_version": 3,
-  "name": "QualiVaga — Assistente Gupy",
-  "version": "1.0.0",
-  "description": "Analisa vagas e sugere respostas com revisão humana.",
+  "name": "QualiVaga — Descoberta de Vagas & Copiloto de Candidatura",
+  "version": "2.0.0",
+  "description": "Motor de descoberta multi-plataforma (Gupy, LinkedIn e InfoJobs), cálculo híbrido de Match Score e copiloto ético de candidatura.",
   "minimum_chrome_version": "114",
   "permissions": ["storage", "activeTab", "scripting"],
-  "host_permissions": ["https://*.gupy.io/*", "https://api.openai.com/*"],
-  "background": { "service_worker": "background.js" },
+  "host_permissions": [
+    "*://*.gupy.io/*",
+    "*://*.linkedin.com/*",
+    "*://*.infojobs.com.br/*",
+    "https://api.openai.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
   "options_page": "options.html",
-  "action": { "default_title": "Configurar QualiVaga" },
-  "content_scripts": [{
-    "matches": ["https://*.gupy.io/*"],
-    "js": ["content.js"],
-    "run_at": "document_idle",
-    "all_frames": false
-  }],
-  "web_accessible_resources": [{
-    "resources": ["styles.css"],
-    "matches": ["https://*.gupy.io/*"]
-  }],
+  "action": {
+    "default_title": "Abrir QualiVaga — Radar de Vagas & Currículo",
+    "default_popup": "options.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.gupy.io/*",
+        "*://*.linkedin.com/*",
+        "*://*.infojobs.com.br/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["styles.css", "resume.example.json", "resume.schema.json"],
+      "matches": [
+        "*://*.gupy.io/*",
+        "*://*.linkedin.com/*",
+        "*://*.infojobs.com.br/*"
+      ]
+    }
+  ],
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'none'; connect-src https://api.openai.com; base-uri 'none'"
+    "extension_pages": "script-src 'self'; object-src 'none'; connect-src https://api.openai.com https://*.gupy.io https://*.linkedin.com https://*.infojobs.com.br; base-uri 'none'"
   }
 }
