@@ -482,7 +482,9 @@
    */
   function renderSkillTags(score, matched, missing) {
     if (typeof score === "number" && Number.isFinite(score)) {
-      matchBadge.textContent = `${Math.round(score)}% Match`;
+      const rounded = Math.round(score);
+      matchBadge.textContent = `${rounded}% Match`;
+      matchBadge.className = `${prefix}score-badge ${rounded >= 75 ? `${prefix}score-high` : `${prefix}score-low`}`;
     }
     localSkillsBox.replaceChildren();
     for (const skill of (matched || []).slice(0, 8)) {
