@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qualivaga.local/resume.schema.json",
+  "title": "QualiVaga Resume Schema",
+  "description": "Schema padronizado e livre de PII sensível para descoberta de vagas, cálculo de Match Score e copiloto de candidatura.",
+  "type": "object",
+  "required": [
+    "perfil",
+    "palavras_chave_busca",
+    "hard_skills",
+    "projetos_e_experiencias",
+    "formacao",
+    "preferencias_vaga"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "perfil": {
+      "type": "object",
+      "required": ["titulo", "senioridade", "resumo"],
+      "properties": {
+        "titulo": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 150,
+          "description": "Cargo ou título profissional alvo (ex: Engenheiro de Software Full Stack)"
+        },
+        "senioridade": {
+          "type": "string",
+          "enum": ["estagio", "junior", "pleno", "senior", "especialista", "lead"],
+          "description": "Nível de senioridade atual ou alvo"
+        },
+        "anos_experiencia": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 60
+        },
+        "resumo": {
+          "type": "string",
+          "minLength": 20,
+          "maxLength": 2500,
+          "description": "Resumo profissional objetivo baseado em fatos verificáveis"
+        },
+        "idiomas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["idioma", "nivel"],
+            "properties": {
+              "idioma": { "type": "string" },
+              "nivel": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "palavras_chave_busca": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 15,
+      "items": {
+        "type": "string",
+        "minLength": 2,
+        "maxLength": 80
+      },
+      "description": "Termos de busca para varredura ativa em Gupy, LinkedIn e InfoJobs"
+    },
+    "hard_skills": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 60,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 80
+      },
+      "description": "Competências técnicas, linguagens, frameworks e ferramentas comprovadas"
+    },
+    "projetos_e_experiencias": {
+      "type": "array",
+      "maxItems": 25,
+      "items": {
+        "type": "object",
+        "required": ["titulo", "organizacao", "descricao", "tecnologias"],
+        "properties": {
+          "id": { "type": "string" },
+          "tipo": { "type": "string", "enum": ["experiencia", "projeto", "voluntariado", "academico"] },
+          "titulo": { "type": "string", "maxLength": 200 },
+          "organizacao": { "type": "string", "maxLength": 200 },
+          "periodo": { "type": "string", "maxLength": 100 },
+          "descricao": { "type": "string", "maxLength": 2000 },
+          "resultados": {
+            "type": "array",
+            "items": { "type": "string", "maxLength": 500 }
+          },
+          "tecnologias": {
+            "type": "array",
+            "items": { "type": "string", "maxLength": 80 }
+          }
+        }
+      }
+    },
+    "formacao": {
+      "type": "array",
+      "maxItems": 15,
+      "items": {
+        "type": "object",
+        "required": ["curso", "instituicao"],
+        "properties": {
+          "curso": { "type": "string", "maxLength": 200 },
+          "instituicao": { "type": "string", "maxLength": 200 },
+          "nivel": { "type": "string", "maxLength": 100 },
+          "status": { "type": "string", "maxLength": 100 },
+          "ano_conclusao": { "type": "string", "maxLength": 20 }
+        }
+      }
+    },
+    "preferencias_vaga": {
+      "type": "object",
+      "required": ["modalidades"],
+      "properties": {
+        "modalidades": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": ["remoto", "hibrido", "presencial"]
+          }
+        },
+        "localidades": {
+          "type": "array",
+          "items": { "type": "string", "maxLength": 120 }
+        },
+        "plataformas_ativas": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["Gupy", "LinkedIn", "InfoJobs"]
+          }
+        },
+        "nivel_minimo_match": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "perfil": {
+    "titulo": "Desenvolvedor Full Stack JavaScript",
+    "senioridade": "pleno",
+    "anos_experiencia": 3,
+    "resumo": "Desenvolvedor Full Stack com 3 anos de experiência prática construindo aplicações web e extensões Chrome com JavaScript, TypeScript, React, Node.js e PostgreSQL. Foco em performance, acessibilidade, automação com Playwright e integração segura com APIs de LLMs.",
+    "idiomas": [
+      { "idioma": "Português", "nivel": "Nativo" },
+      { "idioma": "Inglês", "nivel": "Avançado (leitura e escrita técnica)" }
+    ]
+  },
+  "palavras_chave_busca": [
+    "Desenvolvedor Full Stack",
+    "Engenheiro Front-end React",
+    "Desenvolvedor Node.js"
+  ],
+  "hard_skills": [
+    "JavaScript",
+    "TypeScript",
+    "React",
+    "Node.js",
+    "PostgreSQL",
+    "SQL",
+    "HTML5",
+    "CSS3",
+    "Playwright",
+    "Git",
+    "REST API",
+    "Docker"
+  ],
+  "projetos_e_experiencias": [
+    {
+      "id": "exp-1",
+      "tipo": "experiencia",
+      "titulo": "Desenvolvedor Web Full Stack",
+      "organizacao": "Tech Solutions Brasil (Exemplo)",
+      "periodo": "2024 - Atual",
+      "descricao": "Desenvolvimento e manutenção de aplicações SPA em React e microsserviços em Node.js com banco de dados PostgreSQL.",
+      "resultados": [
+        "Redução de 35% no tempo de carregamento de relatórios com paginação e índices SQL.",
+        "Implementação de suíte de testes E2E com Playwright cobrindo fluxos críticos de checkout."
+      ],
+      "tecnologias": ["React", "TypeScript", "Node.js", "PostgreSQL", "Playwright", "Docker"]
+    },
+    {
+      "id": "proj-1",
+      "tipo": "projeto",
+      "titulo": "QualiVaga — Motor de Curadoria e Copiloto MV3",
+      "organizacao": "Projeto Open Source",
+      "periodo": "2026",
+      "descricao": "Extensão Chrome Manifest V3 em Vanilla JS com isolamento Shadow DOM, busca multi-plataforma e integração determinística com OpenAI Structured Outputs.",
+      "resultados": [
+        "Arquitetura Zero-Build com validação JSDoc e testes automatizados via Chrome DevTools Protocol."
+      ],
+      "tecnologias": ["JavaScript", "Chrome Extensions MV3", "Shadow DOM", "OpenAI API", "Playwright"]
+    }
+  ],
+  "formacao": [
+    {
+      "curso": "Análise e Desenvolvimento de Sistemas",
+      "instituicao": " Universidade Tecnológica (Exemplo)",
+      "nivel": "Graduação Tecnológica",
+      "status": "Concluído",
+      "ano_conclusao": "2024"
+    }
+  ],
+  "preferencias_vaga": {
+    "modalidades": ["remoto", "hibrido"],
+    "localidades": ["São Paulo - SP", "Brasil"],
+    "plataformas_ativas": ["Gupy", "LinkedIn", "InfoJobs"],
+    "nivel_minimo_match": 40
+  }
+}
