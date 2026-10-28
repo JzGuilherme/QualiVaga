@@ -1,13 +1,21 @@
-```markdown
-# 🎯 QualiVaga
+# 🎯 QualiVaga — Motor Multi-Plataforma de Vagas & Copiloto de Candidatura (Manifest V3)
 
-> **Assistente Inteligente e Privado de Candidatura para Gupy**  
-> Extensão nativa para Google Chrome (Manifest V3) desenvolvida em **JavaScript Vanilla**, sem dependências de execução, sem pipeline de *build* e com foco rigoroso em privacidade, acurácia e resiliência a SPAs.
+> **Motor de Descoberta, Curadoria de Vagas e Copiloto Ético de Candidatura de Precisão**  
+> Extensão nativa para Google Chrome (**Manifest V3**) construída em **JavaScript Vanilla (Zero Build)**, com isolamento **Shadow DOM**, busca ativa multi-plataforma (**Gupy**, **LinkedIn** e **InfoJobs**), cálculo híbrido de **Match Score (%)**, trava anti-alucinação via **OpenAI Structured Outputs (`gpt-4o-mini`)** e suíte de auditoria **Playwright/CDP**.
 
 ---
 
-> 🚧 **STATUS DO PROJETO: EM DESENVOLVIMENTO ATIVO (WIP / MVP)**  
-> O **QualiVaga** é um projeto experimental em fase de construção, validação técnica e testes iterativos. **Esta aplicação ainda não é um produto finalizado.** Recursos, seletores de DOM e fluxos de IA continuam sendo aprimorados continuamente.
+## 💡 Visão do Produto
+
+O **QualiVaga** **NÃO** é um disparador de spam de currículos em massa. Ele atua como um **Radar Inteligente e Copiloto de Precisão** sob controle humano:
+
+1. **Currículo JSON Padronizado (`resume.schema.json`):** O usuário importa ou edita seu currículo estruturado localmente em `chrome.storage.local` (ou cola texto livre para conversão automática).
+2. **Descoberta Multi-Plataforma em Tempo Real:** Com um clique em *"Rodar Busca pelo Meu Currículo"*, o Service Worker pesquisa simultaneamente vagas abertas na **Gupy**, **LinkedIn** e **InfoJobs**.
+3. **Match Score Híbrido Explicável (60% Determinístico + 40% Semântico):**
+   - **Camada 1 (Local / Rápida — Peso 60%):** Cruza deterministicamente `hard_skills`, senioridade (`estagio`, `junior`, `pleno`, `senior`, `especialista`, `lead`) e modalidade (`remoto`, `hibrido`, `presencial`) sem gastar tokens.
+   - **Camada 2 (Semântica via `gpt-4o-mini` — Peso 40%):** Avalia a aderência real entre os projetos/experiências do candidato e os requisitos da vaga.
+4. **Painel Consolidado ("Encontramos X vagas compatíveis com o seu currículo"):** Lista ranqueada por Match Score (%), com filtros por plataforma, tags de competências encontradas/faltantes e botão *"Abrir com Copiloto"*.
+5. **Copiloto Ético na Página da Vaga (Zero Alucinação):** Gera rascunhos em primeira pessoa exigindo citação explícita do item real do currículo (`fato_base_curriculo`) e preenche formulários reativos (**React 16+**, **Vue 3** e `contenteditable="true"`) simulando a cadeia completa de eventos nativos do navegador.
 
 ---
 
@@ -15,135 +23,136 @@
 
 | Módulo / Funcionalidade | Status | Descrição |
 | :--- | :---: | :--- |
-| **Arquitetura Base (Manifest V3)** | ✅ Concluído | Comunicação isolada via *Service Worker* e *Options UI*. |
-| **Extração de Descrição (JD) e Perguntas** | 🚧 Em Testes | Mapeamento dinâmico no DOM da Gupy (sujeito a variações do layout). |
-| **Análise e Matching com IA (`gpt-4o-mini`)** | 🚧 Em Validação | Prompts e estruturação do JSON de resposta em fase de ajustes. |
-| **Injeção de Eventos React/Vue** | 🚧 Em Dev | Simulação nativa de `input`/`change`/`blur` para persistência no cliente. |
-| **Suíte de Testes Locais e CDP** | 🧪 Ativo | Validações sintéticas ativas via Playwright e formulários em memória. |
+| **Arquitetura Manifest V3 (Zero Build)** | ✅ Concluído | Service Worker ES6 Modules (`background.js`), Content Script e Popup/Options UI sem bundlers em produção. |
+| **Schema & Validador de Currículo (`resume.schema.json`)** | ✅ Concluído | Validação estrita, normalização e conversão de texto livre em `src/resume-validator.js`. |
+| **Job Discovery Engine (`Gupy`, `LinkedIn`, `InfoJobs`)** | ✅ Concluído | Padrão Adapter (`src/adapters.js`) com fallback SSR/DOM e diagnóstico transparente sem mocks silenciosos. |
+| **Motor de Match Score Híbrido (`src/match-engine.js`)** | ✅ Concluído | Ponderação 60% determinística local + 40% semântica via `gpt-4o-mini`. |
+| **Trava Anti-Alucinação (`strict: true` + `store: false`)** | ✅ Concluído | OpenAI Structured Outputs com `fato_base_curriculo` obrigatório e sanitização de PII. |
+| **Injeção Resiliente em DOM Reativo (React / Vue / Rich Text)** | ✅ Concluído | Bypass de Virtual DOM via native prototype setters + cadeia de 7 eventos e `MutationObserver`. |
+| **Telemetria Local de KPIs & Matriz de Decisão Alpha/Beta** | ✅ Concluído | Medição local em `src/telemetry-debug.js` e veredito automático em `scripts/evaluate-mvp.cjs`. |
 
 ---
 
-## ✨ Destaques Técnicos
-
-* **⚡ Zero Build & Zero Dependencies:** Código executável em JS puro. Nenhuma camada de transpilação ou pacote de terceiros em produção.
-* **🔒 Privacidade por Design (`store: false`):** Seus dados profissionais e chave de API nunca passam por servidores intermediários; a comunicação ocorre direto entre o navegador e a OpenAI.
-* **⚛️ Integração Nativa com React/Vue:** Simulação precisa de eventos do DOM (`input`, `change`, `blur`) e manipuladores de estado nativos para garantir a persistência no formulário da Gupy.
-* **🛡️ Execução Segura em Shadow DOM:** Interface do *widget* totalmente isolada do CSS da página hospedeira.
-
----
-
-## 🚀 Guia de Instalação (Ambiente de Desenvolvimento)
-
-1. Acesse no Chrome: `chrome://extensions`
-2. Ative o **Modo do desenvolvedor** no canto superior direito.
-3. Clique em **Carregar sem compactação** e selecione a pasta raiz deste repositório (onde está o `manifest.json`).
-4. Abra as **Configurações** da extensão (clicando no ícone dela):
-   * Insira sua API Key da OpenAI (modelo `gpt-4o-mini`).
-   * Cadastre o seu **Master Profile** em formato JSON.
-   * Salve as alterações.
-5. Acesse ou recarregue qualquer página da **Gupy** (`https://*.gupy.io/*`). O widget aparecerá no canto inferior direito.
-
----
-
-## 🔄 Fluxo de Uso em 3 Passos
+## 🏗️ Arquitetura Técnica e Segurança
 
 ```text
-┌─────────────────────────┐     ┌─────────────────────────┐     ┌─────────────────────────┐
-│  1. Revisar Descrição   │ ──> │   2. Analisar com IA    │ ──> │ 3. Preencher e Aplicar  │
-│  Extrai JD e questões.  │     │  Calcula Match Score e  │     │ Injeta respostas no DOM │
-│ Ajuste manual se preciso│     │  gera sugestões custom. │     │  mantendo rascunhos.    │
-└─────────────────────────┘     └─────────────────────────┘     └─────────────────────────┘
-
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                         QUALIVAGA — ARQUITETURA MV3                          │
+├───────────────────────┬──────────────────────────┬───────────────────────────┤
+│   Content Script      │   Service Worker (ES6)   │   Portais & OpenAI API    │
+│   (content.js)        │   (background.js)        │                           │
+│                       │                          │  • Gupy (API + SSR Next)  │
+│ • Shadow DOM (open)   │ • JobDiscoveryEngine     │  • LinkedIn Guest Jobs    │
+│ • Extração JD/Campos  │ • Match Engine (60/40)   │  • InfoJobs Brasil SSR    │
+│ • Native Setter React │ • Sanitização de PII     │  • OpenAI (gpt-4o-mini)   │
+│ • DOM Fallback Tab    │ • Storage Session/Local  │    store: false / strict  │
+└───────────────────────┴──────────────────────────┴───────────────────────────┘
 ```
 
-1. **Revisar Descrição:** Expanda **Revisar descrição enviada**. Confira o texto da vaga (JD) e as perguntas capturadas (cole manualmente se a etapa não contiver a JD).
-2. **Analisar:** Autorize o envio e clique em **Analisar**. A extensão avaliará o alinhamento do perfil e gerará sugestões para até 20 perguntas abertas.
-3. **Preencher e Aplicar:** Revise a nota estimada, edite os textos gerados conforme necessário, selecione os campos desejados e clique em **Preencher respostas selecionadas**.
+### Garantias de Segurança e Privacidade
+* **Isolamento Total da Chave (`TRUSTED_CONTEXTS`):** A `apiKey` da OpenAI jamais transita pelo `content.js` ou páginas de terceiros. Todas as requisições saem exclusivamente do Service Worker (`background.js`) com `"store": false` e `temperature: 0.2`.
+* **Sanitização Heurística de PII (`cleanText` / `cleanProfile`):** Antes de qualquer chamada à OpenAI, chaves `sk-*`, CPFs, telefones, e-mails, endereços, senhas e atributos sensíveis são removidos.
+* **Evidence-Based Grounding (Proibido Inventar Fatos):** O schema JSON estrito (`response_format: { type: "json_schema", json_schema: { strict: true } }`) obriga o modelo a preencher `fato_base_curriculo` antes de `rascunho_resposta`. Quando há lacuna técnica no currículo, o modelo declara a lacuna honestamente e destaca projetos correlatos e capacidade de aprendizado.
+* **Zero `innerHTML`:** Toda construção de interface em `content.js` e `options.js` utiliza exclusivamente `document.createElement` e `textContent`, prevenindo vetores de XSS.
 
 ---
 
-## 📂 Mapeamento do Repositório
+## ⚛️ Motor Resiliente de Injeção no DOM (`injectReactiveValue`)
+
+Para garantir que SPAs modernas em **React 16/17/18/19**, **Vue 3** e editores Rich Text (`contenteditable="true"`) reconheçam e persistam o valor preenchido sem sobrescrevê-lo no próximo ciclo de renderização:
+
+1. `element.focus()`
+2. `new FocusEvent('focusin', { bubbles: true })`
+3. Mutação via **Native Prototype Setter** (`Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set` / `HTMLTextAreaElement.prototype`) ou `textContent` para `isContentEditable`
+4. `new InputEvent('input', { bubbles: true, cancelable: true, inputType: 'insertText', data: value })`
+5. `new Event('change', { bubbles: true })`
+6. `new FocusEvent('blur', { bubbles: true })`
+7. `new FocusEvent('focusout', { bubbles: true })`
+
+---
+
+## 📂 Estrutura do Repositório
 
 ```text
 QualiVaga/
-├── manifest.json            # Configuração MV3, permissões, content script, worker e CSP
-├── options.html / .js       # Interface de configuração, validação de JSON e chave OpenAI
-├── background.js            # Service Worker: validação, sanitização e chamadas à OpenAI
-├── content.js               # Content Script: extração do DOM, observação de SPAs e auto-fill
-├── styles.css               # Estilos prefixados e isolados via Shadow DOM
+├── manifest.json                         # Configuração Chrome Extension Manifest V3
+├── jsconfig.json                         # Tipagem estática Zero-Build com checkJs: true
+├── background.js                         # Service Worker: Orquestração, Segurança e OpenAI API
+├── content.js                            # Content Script: Painel Shadow DOM e Injeção Reativa
+├── options.html / options.js             # UI Principal: Radar de Vagas, Meu Currículo e KPIs
+├── styles.css                            # Estilos encapsulados do Shadow DOM e Options UI
+├── resume.schema.json                    # JSON Schema Draft 2020-12 do currículo padronizado
+├── resume.example.json                   # Exemplo público de currículo estruturado
+├── .env.example                          # Template de variáveis para testes locais/Playwright
+├── src/
+│   ├── adapters.js                       # GupyAdapter, LinkedInAdapter, InfoJobsAdapter e Engine
+│   ├── match-engine.js                   # Cálculo de Match Score Híbrido (Determinístico + Semântico)
+│   ├── resume-validator.js               # Validador, normalizador e conversor Texto -> JSON
+│   └── telemetry-debug.js                # Coleta 100% local de KPIs técnicos e de produto
+├── docs/
+│   └── VALIDATION_PLAYBOOK.md            # Hipóteses de Valor/Crescimento e Matriz de Personas
+├── scripts/
+│   └── evaluate-mvp.cjs                  # Runner da Matriz de Decisão (Escalar, Iterar ou Pivotar)
 └── tests/
-    ├── background.test.cjs  # Testes unitários do worker (sem API ou libs externas)
-    ├── browser.test.cjs     # Testes E2E no Chrome headless via Playwright e CDP
-    └── inspect-live.cjs     # Inspeção read-only em vagas públicas da Gupy
-
+    ├── alpha-personas.test.cjs           # Testes Alpha controlados com as 3 Personas sintéticas
+    ├── beta-live.test.cjs                # Sonda Beta em Rede Real dentro do Chromium MV3
+    ├── background.test.cjs               # Testes unitários de segurança, retry e sanitização
+    ├── browser.test.cjs                  # Testes E2E Playwright/CDP com React 19 e Shadow DOM
+    ├── auth-session.test.cjs             # Testes de preservação de sessão autenticada da Gupy
+    ├── load-env.cjs                      # Carregador Zero-Build de variáveis do arquivo .env
+    └── fixtures/personas/                # Currículos sintéticos (Dev Jr, Back-end Pleno, QA SDET)
 ```
 
 ---
 
-## 🛡️ Arquitetura, Segurança e Privacidade
+## 🚀 Instalação e Configuração
 
-```text
-┌──────────────────┐           ┌──────────────────┐           ┌──────────────────┐
-│  Content Script  │ ────────> │Background Worker │ ────────> │   OpenAI API     │
-│ (Captura/Preenche│  ANALYZE  │ (Valida/Sanitiza │ HTTPS Auth│  (gpt-4o-mini)   │
-│      DOM)        │  CANCEL   │  e faz Chamada)  │           │                  │
-└──────────────────┘           └──────────────────┘           └──────────────────┘
+### 1. Carregar a Extensão no Google Chrome
+1. Abra `chrome://extensions` no navegador.
+2. Ative a chave **Modo do desenvolvedor** (canto superior direito).
+3. Clique em **Carregar sem compactação** e selecione a pasta raiz `QualiVaga`.
+4. Clique no ícone da extensão para abrir o painel **Radar Multi-Plataforma & Currículo**:
+   - Na aba **Meu Currículo**, importe seu JSON (seguindo `resume.example.json`) ou cole seu currículo e salve.
+   - Opcionalmente, adicione sua chave `sk-...` da OpenAI para habilitar a Camada 2 semântica e o Copiloto de respostas abertas.
+   - Na aba **Radar de Vagas**, clique em **Rodar Busca pelo Meu Currículo**.
 
+### 2. Configuração do `.env` para Scripts de Terminal / Playwright
+Copie o arquivo `.env.example` para `.env` na raiz (o arquivo `.env` e `meu-curriculo.json` são ignorados pelo `.gitignore`):
+
+```dotenv
+# Arquivo .env (Ignorado pelo .gitignore — Uso exclusivo dos scripts Node/Playwright)
+OPENAI_API_KEY=sk-proj-sua-chave-aqui-se-for-testar-no-terminal
+QUALIVAGA_RESUME_PATH=./meu-curriculo.json
+QUALIVAGA_HEADLESS=true
 ```
 
-* **Isolamento de Comunicação:** Não utiliza `window.postMessage` nem aceita mensagens externas. A chave de API e o perfil são lidos apenas pelo *Worker* e pela tela de *Options*.
-* **Storage Local Seguro:** Usa `chrome.storage.local` restrito a `TRUSTED_CONTEXTS`. Sem sincronização em nuvem ou logs de prompts.
-* **Sanitização de Payloads:** Remove heuristicamente e-mails, CPFs, telefones, senhas e URLs antes de enviar à OpenAI. Usa `store: false` nas requisições.
-* **Resiliência de Rede:** Timeout de 25s, backoff exponencial com jitter e até 3 tentativas automáticas para erros 429/5xx.
-
 ---
 
-## 🔍 Regras de Captura, Limitações e DOM
-
-* **Mapeamento Semântico:** Prioriza seções públicas (*Descrição*, *Responsabilidades*, *Requisitos*, *Informações Adicionais*).
-* **Notificação ao React/Vue:** Utiliza o *setter* nativo do elemento e dispara manualmente `input`, `change` e `blur`.
-* **Campos Preservados:** Nunca sobrescreve campos já preenchidos.
-* **Exclusões Heurísticas:** Ignora upload de arquivos, selects, radios, senhas, documentos, contatos e testes automatizados.
-
----
-
-## 🧪 Verificação e Suíte de Testes
-
-### 1. Testes Nativos de Sintaxe e Worker (Node.js 18+)
+## 🧪 Suíte de Testes (Alpha, Beta e Matriz de Decisão)
 
 ```powershell
-node --check background.js
-node --check content.js
-node --check options.js
-node --test tests/background.test.cjs
-
-```
-
-### 2. Testes E2E e Automação de Navegador (Node.js 20+)
-
-```powershell
-# Instala dependências restritas de teste
+# 1. Instalar dependências de desenvolvimento (Playwright, React p/ fixture E2E, esbuild)
 npm ci
 
-# Executa a suíte completa
+# 2. Executar testes rápidos (Unitários + Segurança + Personas Alpha)
 npm test
 
-# Teste de navegador sintético via CDP/Playwright
-npm run test:browser
+# 3. Executar Suíte Alpha Completa (Mocks determinísticos + E2E Chromium/React/Shadow DOM)
+npm run test:alpha
 
-# Inspeção em vaga pública real da Gupy
-npm run test:live
+# 4. Executar Sonda Beta em Rede Real (Chromium MV3 Service Worker consultando Gupy, LinkedIn e InfoJobs)
+npm run test:beta
 
+# 5. Executar Pipeline Completo de Validação de MVP + Matriz de Decisão (Escalar / Iterar / Pivotar)
+npm run validate:mvp
 ```
 
 ---
 
-## 🔄 Procedimento de Recarga em Desenvolvimento
+## 🗺️ Roadmap Futuro (Pós-MVP)
 
-Após modificar `content.js` ou `styles.css`:
-
-1. Acesse `chrome://extensions`.
-2. Clique em **Recarregar** no cartão da extensão **QualiVaga**.
-3. Atualize a aba aberta na Gupy (`F5` ou `Ctrl+R`).
-
----
+O MVP atual mantém foco estrito e alta confiabilidade nas **3 maiores plataformas de empregos do Brasil (`Gupy`, `LinkedIn` e `InfoJobs`)**. As próximas evoluções previstas incluem:
+- [ ] Novos Adapters especializados para portais nichados de tecnologia (**Programathor**, **GeekHunter**, **Remotar**, **Coodesh**).
+- [ ] Adapters para agregadores globais e nacionais (**Glassdoor**, **Indeed**, **Catho**, **Wellfound**).
+- [ ] Modo de comparação lado a lado de requisitos faltantes (*Gap Analysis*) com trilha de estudos recomendada.
+- [ ] Exportação de histórico de candidaturas realizadas em formato CSV/Markdown local.
