@@ -1,7 +1,32 @@
-node_modules/
-test-results/
+# AI Agents, Skills & Prompts Locais (NUNCA SUBIR PARA O GITHUB)
+.agents/
+.agent/
+.skills/
+.skill/
+agents/
+skills/
+*.skill.json
+*.agents.json
+.antigravity/
+.cursor/
+.windsurf/
+.codex/
+CLAUDE.md
+AGENTS.md
+
+# Perfis de autenticação do navegador e cache (Playwright / CDP)
+.test-profile-auth/
 .test-profile*/
+user-data-dir/
+test-results/
+
+# Dependências, variáveis de ambiente, currículo local e pacotes
+node_modules/
 .env
 .env.*
 !.env.example
+meu-curriculo.json
+*.curriculo.json
 npm-debug.log*
+*.rar
+*.zip
