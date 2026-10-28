@@ -618,11 +618,34 @@ async function runJobDiscovery(customResume, signal) {
  */
 async function handleMessage(message, sender) {
   if (!isAuthorizedSender(sender)) throw new Error("Origem não autorizada.");
-  if (message?.type === "OPEN_OPTIONS") {
+  const msgType = message?.type || message?.action;
+  if (msgType === "OPEN_OPTIONS") {
     await chrome.runtime.openOptionsPage();
     return {};
   }
-  if (message?.type === "GET_TELEMETRY") {
+  if (msgType === "EVALUATE_LOCAL_MATCH") {
+    await storageReady;
+    const saved = await chrome.storage.local.get(["masterProfile"]);
+    if (!saved?.masterProfile) {
+      return { hasProfile: false, score: null, matchedSkills: [], missingSkills: [] };
+    }
+    try {
+      const resume = normalizeResume(saved.masterProfile);
+      const det = computeDeterministicMatch(resume, {
+        title: String(message?.payload?.title || ""),
+        description: String(message?.payload?.description || "")
+      });
+      return {
+        hasProfile: true,
+        score: det.score,
+        matchedSkills: det.matchedSkills,
+        missingSkills: det.missingSkills
+      };
+    } catch {
+      return { hasProfile: false, score: null, matchedSkills: [], missingSkills: [] };
+    }
+  }
+  if (msgType === "GET_TELEMETRY") {
     await storageReady;
     return await getTelemetrySnapshot();
   }

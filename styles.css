@@ -30,7 +30,40 @@
 .gupy-ai-helper-brand-wrap {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
+}
+.gupy-ai-helper-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.gupy-ai-helper-panel .gupy-ai-helper-close-btn {
+  background: transparent;
+  color: #536a79;
+  border: 1px solid #d6e1e6;
+  padding: 5px 9px;
+  font-size: 13px;
+  line-height: 1;
+}
+.gupy-ai-helper-panel .gupy-ai-helper-close-btn:hover {
+  background: #fbe9e9;
+  color: #8f1d1d;
+  border-color: #f1b8b8;
+}
+.gupy-ai-helper-copilot-footer {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid #e3ecef;
+}
+.gupy-ai-helper-panel .gupy-ai-helper-footer-link {
+  width: 100%;
+  margin-top: 6px;
+  background: #f0f4f6;
+  color: #126156;
+  border: 1px solid #cce0dd;
+  font-size: 12px;
+  padding: 8px 10px;
 }
 .gupy-ai-helper-header strong { font-size: 18px; }
 .gupy-ai-helper-body { padding: 0 16px 16px; max-height: min(78vh, 780px); overflow-y: auto; }

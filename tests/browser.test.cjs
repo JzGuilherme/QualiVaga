@@ -266,22 +266,34 @@ test('Chrome MV3 integration (isolated profile, intercepted site and **/v1/chat/
       assert.equal(await widget(function(){return this.querySelector('.gupy-ai-helper-results').children.length}),0);
     });
 
-    await t.test('Radar de Vagas in open Shadow DOM discovers jobs, displays Match Score, and exposes open shadowRoot', async () => {
+    await t.test('In-page Copilot in open Shadow DOM specializes on active job, displays Match Score & skill tags, and supports session close (✕)', async () => {
       await fixture('<label>Conte sua trajetória<textarea></textarea></label>');
       const isOpenShadow = await widget(function() {
         return this.mode === 'open';
       });
       assert.equal(isOpenShadow, true, 'Shadow DOM must be open for Playwright testability');
 
+      // Verify redundant tabs were removed and footer link to Radar/Currículo is present
+      const uiCheck = await widget(function() {
+        const buttons = [...this.querySelectorAll('button')].map(b => b.textContent);
+        const scoreBadge = this.querySelector('.gupy-ai-helper-score-badge')?.textContent || '';
+        const matchedTags = [...this.querySelectorAll('.gupy-ai-helper-tag-match')].map(t => t.textContent);
+        const footerBtn = this.querySelector('.gupy-ai-helper-footer-link')?.textContent || '';
+        return { buttons, scoreBadge, matchedTags, footerBtn };
+      });
+      assert.ok(!uiCheck.buttons.includes('Meu Currículo'), 'Redundant Meu Currículo tab must not exist in content script');
+      assert.match(uiCheck.scoreBadge, /\d+% Match/);
+      assert.ok(uiCheck.matchedTags.some(t => t.includes('JavaScript')));
+      assert.equal(uiCheck.footerBtn, 'Abrir Radar de Vagas & Gerenciar Currículo');
+
+      // Test Close ("✕") button persists across SPA route changes in the same session
       await widget(function() {
-        [...this.querySelectorAll('button')].find(b => b.textContent === 'Radar de Vagas').click();
-        [...this.querySelectorAll('button')].find(b => b.textContent === 'Rodar Busca pelo Meu Currículo').click();
+        this.querySelector('.gupy-ai-helper-close-btn').click();
       });
-      await page.waitForTimeout(500);
-      const headline = await widget(function() {
-        return this.querySelector('.gupy-ai-helper-radar-headline')?.textContent || '';
-      });
-      assert.match(headline, /Encontramos \d+ vagas compatíveis com o seu currículo/);
+      assert.equal(await widget(function() { return this.querySelector('.gupy-ai-helper-panel').hidden; }), true);
+      await page.evaluate(() => history.pushState({}, '', '/jobs/99'));
+      await page.waitForTimeout(1200);
+      assert.equal(await widget(function() { return this.querySelector('.gupy-ai-helper-panel').hidden; }), true);
     });
 
     await t.test('options.html renders Radar de Vagas, Meu Currículo, and KPI export button', async () => {

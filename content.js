@@ -4,6 +4,25 @@
   if (/** @type {any} */ (globalThis).__qualiVagaLoaded) return;
   /** @type {any} */ (globalThis).__qualiVagaLoaded = true;
 
+  const DISMISS_KEY = "__qualiVagaDismissedSession";
+  let dismissedInMemory = false;
+
+  function isSessionDismissed() {
+    if (dismissedInMemory) return true;
+    try {
+      return window.sessionStorage?.getItem(DISMISS_KEY) === "1";
+    } catch {
+      return false;
+    }
+  }
+
+  function setSessionDismissed() {
+    dismissedInMemory = true;
+    try {
+      window.sessionStorage?.setItem(DISMISS_KEY, "1");
+    } catch {}
+  }
+
   const prefix = "gupy-ai-helper-";
   const host = document.createElement("div");
   host.id = `${prefix}root`;
@@ -28,32 +47,48 @@
     return el;
   };
 
+  function detectPlatformName() {
+    const h = location.hostname.toLowerCase();
+    if (h.includes("linkedin.com")) return "LinkedIn";
+    if (h.includes("infojobs.com.br")) return "InfoJobs";
+    return "Gupy";
+  }
+
   const panel = make("section", "", "panel");
-  panel.setAttribute("aria-label", "Assistente QualiVaga");
+  panel.setAttribute("aria-label", "Copiloto QualiVaga");
+  if (isSessionDismissed()) {
+    panel.hidden = true;
+  }
+
+  // Header: Brand + Platform Badge + Match Score Badge + Minimize ("Minimizar") & Close ("✕") controls
   const header = make("div", "", "header");
   const brandWrap = make("div", "", "brand-wrap");
-  brandWrap.append(make("strong", "QualiVaga"), make("span", detectPlatformName(), "badge"));
+  const matchBadge = make("span", "--% Match", "score-badge");
+  brandWrap.append(make("strong", "QualiVaga"), make("span", detectPlatformName(), "badge"), matchBadge);
+
+  const headerControls = make("div", "", "header-controls");
   const toggle = /** @type {HTMLButtonElement} */ (make("button", "Minimizar", "secondary"));
   toggle.type = "button";
   toggle.setAttribute("aria-expanded", "true");
   toggle.setAttribute("aria-controls", `${prefix}body`);
-  header.append(brandWrap, toggle);
+
+  const closeBtn = /** @type {HTMLButtonElement} */ (make("button", "✕", "close-btn"));
+  closeBtn.type = "button";
+  closeBtn.setAttribute("aria-label", "Fechar painel na sessão atual");
+  closeBtn.title = "Fechar Copiloto nesta sessão";
+  headerControls.append(toggle, closeBtn);
+  header.append(brandWrap, headerControls);
 
   const body = make("div", "", "body");
   body.id = `${prefix}body`;
 
-  // Navigation Tabs inside Shadow DOM Panel: Copiloto | Radar de Vagas | Meu Currículo
-  const nav = make("div", "", "tabs");
-  const tabCopilotBtn = /** @type {HTMLButtonElement} */ (make("button", "Copiloto", "tab-active"));
-  const tabRadarBtn = /** @type {HTMLButtonElement} */ (make("button", "Radar de Vagas", "secondary"));
-  const tabResumeBtn = /** @type {HTMLButtonElement} */ (make("button", "Meu Currículo", "secondary"));
-  for (const b of [tabCopilotBtn, tabRadarBtn, tabResumeBtn]) b.type = "button";
-  nav.append(tabCopilotBtn, tabRadarBtn, tabResumeBtn);
-
-  // --- SECTION 1: COPILOTO DE CANDIDATURA (Current Page) ---
-  const copilotSection = make("div", "", "section-copilot");
+  // In-Page Copilot Content Only (Focused on the active job page)
   const title = make("p", "", "job-title");
   const count = make("p", "", "muted");
+
+  // Instant Local Match Summary (Matched Hard Skills & Missing Skills)
+  const localSkillsBox = make("div", "", "tags-row");
+
   const details = /** @type {HTMLDetailsElement} */ (make("details"));
   details.append(make("summary", "Revisar descrição enviada"));
   const jdLabel = make("label", "Descrição da vaga (editável)");
@@ -91,79 +126,23 @@
   const fill = /** @type {HTMLButtonElement} */ (make("button", "Preencher respostas selecionadas"));
   fill.type = "button";
   fill.hidden = true;
+  fill.title = "Injetar no Formulário via eventos nativos";
 
-  copilotSection.append(
-    title,
-    count,
-    details,
-    consent,
-    actions,
-    status,
-    results,
-    fill,
-    make("p", "Revise os fatos antes de preencher. O assistente não envia a candidatura.", "muted")
+  // Footer link to open Radar de Vagas & Gerenciar Currículo in options.html
+  const footer = make("div", "", "copilot-footer");
+  const openRadarLink = /** @type {HTMLButtonElement} */ (
+    make("button", "Abrir Radar de Vagas & Gerenciar Currículo", "footer-link")
+  );
+  openRadarLink.type = "button";
+  footer.append(
+    make("p", "Revise os fatos antes de preencher. O assistente não envia a candidatura.", "muted"),
+    openRadarLink
   );
 
-  // --- SECTION 2: RADAR DE VAGAS (Multi-platform Discovery) ---
-  const radarSection = make("div", "", "section-radar");
-  radarSection.hidden = true;
-  const runSearchBtn = /** @type {HTMLButtonElement} */ (make("button", "Rodar Busca pelo Meu Currículo", "primary-full"));
-  runSearchBtn.type = "button";
-  const radarStatus = make("p", "Varra Gupy, LinkedIn e InfoJobs em busca de vagas compatíveis.", "status");
-  const radarHeader = make("h3", "", "radar-headline");
-  radarHeader.hidden = true;
-
-  const filterBar = make("div", "", "filter-bar");
-  let activePlatformFilter = "Todas";
-  const filterButtons = ["Todas", "Gupy", "LinkedIn", "InfoJobs"].map(plat => {
-    const btn = /** @type {HTMLButtonElement} */ (make("button", plat, plat === "Todas" ? "tab-active" : "secondary"));
-    btn.type = "button";
-    btn.addEventListener("click", () => {
-      activePlatformFilter = plat;
-      for (const b of filterButtons) {
-        b.className = prefix + (b.textContent === plat ? "tab-active" : "secondary");
-      }
-      renderRadarJobs(cachedDiscovery);
-    });
-    return btn;
-  });
-  filterBar.append(...filterButtons);
-  const radarList = make("div", "", "radar-list");
-  radarSection.append(runSearchBtn, radarStatus, radarHeader, filterBar, radarList);
-
-  // --- SECTION 3: MEU CURRÍCULO (Inline Quick Editor) ---
-  const resumeSection = make("div", "", "section-resume");
-  resumeSection.hidden = true;
-  const resumeHelp = make("p", "Cole seu currículo JSON padronizado (ou texto livre para conversão automática):", "muted");
-  const resumeEditor = /** @type {HTMLTextAreaElement} */ (make("textarea"));
-  resumeEditor.rows = 10;
-  resumeEditor.maxLength = 25000;
-  const saveResumeBtn = /** @type {HTMLButtonElement} */ (make("button", "Salvar Meu Currículo"));
-  saveResumeBtn.type = "button";
-  const resumeMsg = make("p", "", "muted");
-  resumeSection.append(resumeHelp, resumeEditor, saveResumeBtn, resumeMsg);
-
-  body.append(nav, copilotSection, radarSection, resumeSection);
+  body.append(title, count, localSkillsBox, details, consent, actions, status, results, fill, footer);
   panel.append(header, body);
   shadow.append(panel);
   document.documentElement.append(host);
-
-  function switchTab(target) {
-    copilotSection.hidden = target !== "copilot";
-    radarSection.hidden = target !== "radar";
-    resumeSection.hidden = target !== "resume";
-    tabCopilotBtn.className = prefix + (target === "copilot" ? "tab-active" : "secondary");
-    tabRadarBtn.className = prefix + (target === "radar" ? "tab-active" : "secondary");
-    tabResumeBtn.className = prefix + (target === "resume" ? "tab-active" : "secondary");
-  }
-  tabCopilotBtn.addEventListener("click", () => switchTab("copilot"));
-  tabRadarBtn.addEventListener("click", () => {
-    switchTab("radar");
-    loadRadarState();
-  });
-  tabResumeBtn.addEventListener("click", () => {
-    switchTab("resume");
-  });
 
   let route = location.href;
   /** @type {Array<{el: HTMLElement, label: string, maxLength: number}>} */
@@ -173,15 +152,6 @@
   let jdEdited = false;
   /** @type {Array<{field: {el: HTMLElement, label: string, maxLength: number, hint: string}, editor: HTMLTextAreaElement, selected: HTMLInputElement, originalDraft: string}>} */
   let entries = [];
-  /** @type {any} */
-  let cachedDiscovery = null;
-
-  function detectPlatformName() {
-    const h = location.hostname.toLowerCase();
-    if (h.includes("linkedin.com")) return "LinkedIn";
-    if (h.includes("infojobs.com.br")) return "InfoJobs";
-    return "Gupy";
-  }
 
   /**
    * Sanitizes text before displaying or sending to the background service worker.
@@ -287,8 +257,8 @@
       '[data-testid="jobDescription"]',
       '[id="job-description"]',
       '[id="job-details"]',
-      '.jobs-description__content',
-      '.js_vacancyDataPanels',
+      ".jobs-description__content",
+      ".js_vacancyDataPanels",
       '[itemprop="description"]',
       "main",
       '[role="main"]',
@@ -431,7 +401,12 @@
         const el = /** @type {HTMLElement} */ (node);
         const maxAttr = Number(el.getAttribute("maxlength"));
         const maxProp = /** @type {HTMLInputElement|HTMLTextAreaElement} */ (el).maxLength;
-        const maxLength = Number.isInteger(maxProp) && maxProp > 0 ? maxProp : Number.isInteger(maxAttr) && maxAttr > 0 ? maxAttr : -1;
+        const maxLength =
+          Number.isInteger(maxProp) && maxProp > 0
+            ? maxProp
+            : Number.isInteger(maxAttr) && maxAttr > 0
+              ? maxAttr
+              : -1;
         return { el, label: labelFor(el), maxLength };
       })
       .filter(field => eligible(field.el, field.label))
@@ -441,15 +416,6 @@
   /**
    * Injects text into React 16+, Vue 3, or contenteditable elements using native prototype setters
    * and the full synthetic event chain required by modern reactive frameworks.
-   *
-   * Event sequence:
-   * 1. element.focus()
-   * 2. new FocusEvent('focusin', { bubbles: true })
-   * 3. Native prototype setter mutation (or textContent for contenteditable)
-   * 4. new InputEvent('input', { bubbles: true, cancelable: true, inputType: 'insertText', data: value })
-   * 5. new Event('change', { bubbles: true })
-   * 6. new FocusEvent('blur', { bubbles: true })
-   * 7. new FocusEvent('focusout', { bubbles: true })
    *
    * @param {HTMLElement} el
    * @param {string} value
@@ -503,9 +469,41 @@
    * @param {any} [payload]
    */
   async function message(type, payload) {
-    const result = await chrome.runtime.sendMessage({ type, payload });
+    const result = await chrome.runtime.sendMessage({ type, action: type, payload });
     if (!result?.ok) throw new Error(result?.error || "Sem resposta do serviço. Recarregue a página.");
     return result.data;
+  }
+
+  /**
+   * Renders matched and missing skill badges in the header/top section of the Copilot panel.
+   * @param {number | null} score
+   * @param {string[]} matched
+   * @param {string[]} missing
+   */
+  function renderSkillTags(score, matched, missing) {
+    if (typeof score === "number" && Number.isFinite(score)) {
+      matchBadge.textContent = `${Math.round(score)}% Match`;
+    }
+    localSkillsBox.replaceChildren();
+    for (const skill of (matched || []).slice(0, 8)) {
+      localSkillsBox.append(make("span", `✓ ${skill}`, "tag-match"));
+    }
+    for (const miss of (missing || []).slice(0, 6)) {
+      localSkillsBox.append(make("span", `⚠ Falta: ${miss}`, "tag-missing"));
+    }
+  }
+
+  async function refreshLocalMatchPreview() {
+    if (!jd.value || jd.value.length < 40) return;
+    try {
+      const res = await message("EVALUATE_LOCAL_MATCH", {
+        title: title.textContent || "",
+        description: jd.value
+      });
+      if (res?.hasProfile && !entries.length) {
+        renderSkillTags(res.score, res.matchedSkills || [], res.missingSkills || []);
+      }
+    } catch {}
   }
 
   /**
@@ -523,6 +521,9 @@
 
   function updatePage(force = false) {
     if (!host.isConnected) document.documentElement.append(host);
+    if (isSessionDismissed()) {
+      panel.hidden = true;
+    }
     const changedRoute = route !== location.href;
     if (changedRoute) {
       route = location.href;
@@ -547,7 +548,10 @@
     if (changedRoute || force || (!jdEdited && !busy && !entries.length)) {
       const job = readJob();
       title.textContent = job.title || `Vaga ${detectPlatformName()}`;
-      if (force || changedRoute || !jdEdited) jd.value = job.description;
+      if (force || changedRoute || !jdEdited) {
+        jd.value = job.description;
+        refreshLocalMatchPreview();
+      }
     }
   }
 
@@ -556,6 +560,7 @@
    * @param {Array<{el: HTMLElement, label: string, maxLength: number, hint: string}>} snapshot
    */
   function render(data, snapshot) {
+    renderSkillTags(data.match_score, data.key_skills_found || [], data.missing_skills || []);
     results.replaceChildren(
       make("h2", `${Math.round(data.match_score)}% de compatibilidade estimada`),
       make("p", data.match_reason),
@@ -594,89 +599,6 @@
       ? "Análise concluída. Revise e edite as respostas antes de preencher."
       : "Análise concluída sem respostas preenchíveis. Pode não haver dados suficientes no perfil.";
   }
-
-  /**
-   * Renders the multi-platform Radar de Vagas inside the Shadow DOM panel.
-   * @param {any} discovery
-   */
-  function renderRadarJobs(discovery) {
-    radarList.replaceChildren();
-    if (!discovery || !Array.isArray(discovery.jobs)) {
-      radarHeader.hidden = true;
-      return;
-    }
-    const allJobs = discovery.jobs;
-    radarHeader.hidden = false;
-    radarHeader.textContent = `Encontramos ${allJobs.length} vagas compatíveis com o seu currículo`;
-
-    const filtered = activePlatformFilter === "Todas"
-      ? allJobs
-      : allJobs.filter((/** @type {any} */ j) => j.platform === activePlatformFilter);
-
-    if (filtered.length === 0) {
-      radarList.append(make("p", "Nenhuma vaga encontrada para este filtro.", "muted"));
-      return;
-    }
-
-    for (const job of filtered) {
-      const card = make("div", "", "job-card");
-      const topRow = make("div", "", "job-card-header");
-      topRow.append(
-        make("strong", `${Math.round(job.matchScore ?? job.deterministicScore ?? 0)}% Match`),
-        make("span", `${job.platform} • ${job.workplaceType || "remoto"}`, "badge")
-      );
-      const jobTitle = make("p", `${job.title} — ${job.company}`, "job-title");
-      const matched = Array.isArray(job.matchedSkills) && job.matchedSkills.length
-        ? `Pontos fortes: ${job.matchedSkills.join(", ")}`
-        : "Alinhado ao perfil";
-      const missing = Array.isArray(job.missingSkills) && job.missingSkills.length
-        ? ` | Faltantes: ${job.missingSkills.join(", ")}`
-        : "";
-      const skillsInfo = make("p", `${matched}${missing}`, "muted");
-      const openBtn = /** @type {HTMLButtonElement} */ (make("button", "Abrir com Copiloto", "secondary"));
-      openBtn.type = "button";
-      openBtn.addEventListener("click", () => {
-        window.open(job.url, "_blank", "noopener,noreferrer");
-      });
-      card.append(topRow, jobTitle, skillsInfo, openBtn);
-      radarList.append(card);
-    }
-  }
-
-  async function loadRadarState() {
-    try {
-      const state = await message("GET_DISCOVERY_STATE");
-      if (state?.lastDiscovery?.jobs?.length) {
-        cachedDiscovery = state.lastDiscovery;
-        renderRadarJobs(cachedDiscovery);
-      }
-    } catch {}
-  }
-
-  runSearchBtn.addEventListener("click", async () => {
-    runSearchBtn.disabled = true;
-    radarStatus.textContent = "Varrendo Gupy, LinkedIn e InfoJobs em tempo real…";
-    try {
-      const discovery = await message("DISCOVER_JOBS");
-      cachedDiscovery = discovery;
-      radarStatus.textContent = `Varredura concluída (Gupy: ${discovery.platformCounts?.Gupy || 0}, LinkedIn: ${discovery.platformCounts?.LinkedIn || 0}, InfoJobs: ${discovery.platformCounts?.InfoJobs || 0}).`;
-      renderRadarJobs(discovery);
-    } catch (err) {
-      radarStatus.textContent = err instanceof Error ? err.message : "Erro ao buscar vagas.";
-    } finally {
-      runSearchBtn.disabled = false;
-    }
-  });
-
-  saveResumeBtn.addEventListener("click", async () => {
-    try {
-      const saved = await message("SAVE_RESUME", { resume: resumeEditor.value });
-      resumeEditor.value = JSON.stringify(saved.resume, null, 2);
-      resumeMsg.textContent = "Currículo validado e salvo em chrome.storage.local!";
-    } catch (err) {
-      resumeMsg.textContent = err instanceof Error ? err.message : "Falha ao salvar currículo.";
-    }
-  });
 
   analyze.addEventListener("click", async () => {
     if (busy) return;
@@ -723,6 +645,10 @@
     }
   });
 
+  /**
+   * @param {string} originalDraft
+   * @param {string} finalValue
+   */
   function calculateEditRatio(originalDraft, finalValue) {
     const a = String(originalDraft || "").trim();
     const b = String(finalValue || "").trim();
@@ -793,14 +719,19 @@
     updatePage(true);
   });
   settings.addEventListener("click", () => {
-    message("OPEN_OPTIONS").catch(error => {
-      status.textContent = error.message;
-    });
+    chrome.runtime.sendMessage({ type: "OPEN_OPTIONS", action: "OPEN_OPTIONS" }).catch(() => {});
+  });
+  openRadarLink.addEventListener("click", () => {
+    chrome.runtime.sendMessage({ type: "OPEN_OPTIONS", action: "OPEN_OPTIONS" }).catch(() => {});
   });
   toggle.addEventListener("click", () => {
     body.hidden = !body.hidden;
     toggle.textContent = body.hidden ? "Abrir" : "Minimizar";
     toggle.setAttribute("aria-expanded", String(!body.hidden));
+  });
+  closeBtn.addEventListener("click", () => {
+    setSessionDismissed();
+    panel.hidden = true;
   });
 
   let scheduled = false;
